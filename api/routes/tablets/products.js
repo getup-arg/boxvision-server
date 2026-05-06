@@ -4,14 +4,14 @@ const db = require("../../../config/db-totem");
 
 router.get("/", (req, res, next) => {
   db.query(
-    "SELECT product.*," +
-      "CONCAT('Esfera Uno ',rangograduacion.esferaunodesde ,'-', rangograduacion.esferaunohasta," +
-      "',Cilindro Uno ',rangograduacion.cilindrounodesde,'-',rangograduacion.cilindrounohasta," +
-      "' // Esfera Dos ',rangograduacion.esferadosdesde ,'-', rangograduacion.esferadoshasta," +
-      "',Cilindro Dos ',rangograduacion.cilindrodosdesde,'-',rangograduacion.cilindrodoshasta)" +
-      " AS 'graduaciondesc',tipolenteprod.nombre as 'tipolente' FROM product " +
-      "LEFT OUTER JOIN rangograduacion ON product.rangograduacion = rangograduacion.id " +
-      "LEFT OUTER JOIN product as tipolenteprod ON product.idTipoLente = tipolenteprod.id",
+    "SELECT product_tablets.*," +
+      "CONCAT('Esfera Uno ',rangograduacion_tablets.esferaunodesde ,'-', rangograduacion_tablets.esferaunohasta," +
+      "',Cilindro Uno ',rangograduacion_tablets.cilindrounodesde,'-',rangograduacion_tablets.cilindrounohasta," +
+      "' // Esfera Dos ',rangograduacion_tablets.esferadosdesde ,'-', rangograduacion_tablets.esferadoshasta," +
+      "',Cilindro Dos ',rangograduacion_tablets.cilindrodosdesde,'-',rangograduacion_tablets.cilindrodoshasta)" +
+      " AS 'graduaciondesc',tipolenteprod.nombre as 'tipolente' FROM product_tablets " +
+      "LEFT OUTER JOIN rangograduacion_tablets ON product_tablets.rangograduacion = rangograduacion_tablets.id " +
+      "LEFT OUTER JOIN product_tablets as tipolenteprod ON product_tablets.idTipoLente = tipolenteprod.id",
     function (err, results) {
       if (err) {
         console.error("DB error GET /tablets/products:", err);
@@ -27,14 +27,14 @@ router.get("/:productId", (req, res, next) => {
 
   if (id === "tipolentes") {
     db.query(
-      "SELECT product.id as 'value', product.nombre as 'label',product.rangograduacion,product.precio," +
-        "CONCAT('Esfera Uno ',rangograduacion.esferaunodesde ,'-', rangograduacion.esferaunohasta," +
-        "',Cilindro Uno ',rangograduacion.cilindrounodesde,'-',rangograduacion.cilindrounohasta," +
-        "' // Esfera Dos ',rangograduacion.esferadosdesde ,'-', rangograduacion.esferadoshasta," +
-        "',Cilindro Dos ',rangograduacion.cilindrodosdesde,'-',rangograduacion.cilindrodoshasta)" +
-        "AS 'graduaciondesc' FROM product " +
-        "LEFT OUTER JOIN rangograduacion ON product.rangograduacion = rangograduacion.id WHERE tipo = 'lente' " +
-        "ORDER BY product.precio ASC",
+      "SELECT product_tablets.id as 'value', product_tablets.nombre as 'label',product_tablets.rangograduacion,product_tablets.precio," +
+        "CONCAT('Esfera Uno ',rangograduacion_tablets.esferaunodesde ,'-', rangograduacion_tablets.esferaunohasta," +
+        "',Cilindro Uno ',rangograduacion_tablets.cilindrounodesde,'-',rangograduacion_tablets.cilindrounohasta," +
+        "' // Esfera Dos ',rangograduacion_tablets.esferadosdesde ,'-', rangograduacion_tablets.esferadoshasta," +
+        "',Cilindro Dos ',rangograduacion_tablets.cilindrodosdesde,'-',rangograduacion_tablets.cilindrodoshasta)" +
+        "AS 'graduaciondesc' FROM product_tablets " +
+        "LEFT OUTER JOIN rangograduacion_tablets ON product_tablets.rangograduacion = rangograduacion_tablets.id WHERE tipo = 'lente' " +
+        "ORDER BY product_tablets.precio ASC",
       function (err, results) {
         if (err) {
           console.error("DB error GET /tablets/products/tipolentes:", err);
@@ -46,8 +46,8 @@ router.get("/:productId", (req, res, next) => {
   } else if (id === "antireflejo") {
     const idTipoLente = req.query.idTipoLente;
     db.query(
-      "SELECT product.id as 'value', product.nombre as 'label', product.precio FROM product " +
-        "WHERE tipo = 'antireflejo' AND idTipoLente = ? ORDER BY product.precio ASC",
+      "SELECT product_tablets.id as 'value', product_tablets.nombre as 'label', product_tablets.precio FROM product_tablets " +
+        "WHERE tipo = 'antireflejo' AND idTipoLente = ? ORDER BY product_tablets.precio ASC",
       [idTipoLente],
       function (err, results) {
         if (err) {
@@ -60,8 +60,8 @@ router.get("/:productId", (req, res, next) => {
   } else if (id === "fotocromatico") {
     const idTipoLente = req.query.idTipoLente;
     db.query(
-      "SELECT product.id as 'value', product.nombre as 'label', product.precio FROM product " +
-        "WHERE tipo = 'fotocromatico' AND idTipoLente = ? ORDER BY product.precio ASC",
+      "SELECT product_tablets.id as 'value', product_tablets.nombre as 'label', product_tablets.precio FROM product_tablets " +
+        "WHERE tipo = 'fotocromatico' AND idTipoLente = ? ORDER BY product_tablets.precio ASC",
       [idTipoLente],
       function (err, results) {
         if (err) {
@@ -73,7 +73,7 @@ router.get("/:productId", (req, res, next) => {
     );
   } else if (id === "marcos") {
     db.query(
-      "SELECT * FROM product WHERE tipo = 'marco' ORDER BY product.precio ASC",
+      "SELECT * FROM product_tablets WHERE tipo = 'marco' ORDER BY product_tablets.precio ASC",
       function (err, results) {
         if (err) {
           console.error("DB error GET /tablets/products/marcos:", err);
@@ -84,7 +84,7 @@ router.get("/:productId", (req, res, next) => {
     );
   } else {
     db.query(
-      "SELECT * FROM product WHERE id = ?",
+      "SELECT * FROM product_tablets WHERE id = ?",
       [id],
       function (err, results) {
         if (err) {
@@ -99,7 +99,7 @@ router.get("/:productId", (req, res, next) => {
 
 router.patch("/increase/:valueIncrease", (req, res, next) => {
   const factor = 1 + req.params.valueIncrease / 100;
-  db.query("UPDATE product SET precio = CEIL(precio * ?)", [factor], (err) => {
+  db.query("UPDATE product_tablets SET precio = CEIL(precio * ?)", [factor], (err) => {
     if (err) {
       console.error("DB error PATCH /tablets/products/increase:", err);
       return res.status(500).json({ error: err.message });
@@ -110,7 +110,7 @@ router.patch("/increase/:valueIncrease", (req, res, next) => {
 
 router.patch("/decrease/:valueDecrease", (req, res, next) => {
   const factor = 1 - req.params.valueDecrease / 100;
-  db.query("UPDATE product SET precio = CEIL(precio * ?)", [factor], (err) => {
+  db.query("UPDATE product_tablets SET precio = CEIL(precio * ?)", [factor], (err) => {
     if (err) {
       console.error("DB error PATCH /tablets/products/decrease:", err);
       return res.status(500).json({ error: err.message });
@@ -136,7 +136,7 @@ router.patch("/:productId", (req, res, next) => {
   };
 
   db.query(
-    "UPDATE `product` SET `nombre` = ?, `precio` = ?, `tipo` = ?, `rangograduacion` = ?, `idTipoLente` = ?, `label` = ?, `descripcion` = ?, `imgUrl` = ?, `galleryImages` = ?, `instagramLink` = ?, `color` = ? WHERE id = ?",
+    "UPDATE `product_tablets` SET `nombre` = ?, `precio` = ?, `tipo` = ?, `rangograduacion` = ?, `idTipoLente` = ?, `label` = ?, `descripcion` = ?, `imgUrl` = ?, `galleryImages` = ?, `instagramLink` = ?, `color` = ? WHERE id = ?",
     [product.nombre, product.precio, product.tipo, product.rangograduacion, product.idTipoLente, product.label, product.descripcion, product.imgUrl, product.galleryImages, product.instagramLink, product.color, product.id],
     function (err, results) {
       if (err) {
@@ -150,7 +150,7 @@ router.patch("/:productId", (req, res, next) => {
 
 router.delete("/:productId", (req, res, next) => {
   db.query(
-    "DELETE FROM `product` WHERE id = ?",
+    "DELETE FROM `product_tablets` WHERE id = ?",
     [req.params.productId],
     function (err, results) {
       if (err) {
@@ -178,7 +178,7 @@ router.post("/", (req, res, next) => {
   };
 
   db.query(
-    "INSERT INTO `product`(`nombre`, `precio`, `tipo`, `rangograduacion`, `label`, `idTipoLente`, `descripcion`, `imgUrl`, `galleryImages`, `instagramLink`, `color`) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO `product_tablets`(`nombre`, `precio`, `tipo`, `rangograduacion`, `label`, `idTipoLente`, `descripcion`, `imgUrl`, `galleryImages`, `instagramLink`, `color`) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
     [product.nombre, product.precio, product.tipo, product.rangograduacion, product.label, product.idTipoLente, product.descripcion, product.imgUrl, product.galleryImages, product.instagramLink, product.color],
     function (err, results) {
       if (err) {

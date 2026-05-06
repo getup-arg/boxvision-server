@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../../../config/db-totem");
 
 router.get("/", (req, res, next) => {
-  db.query("SELECT * FROM usuarioAfiliado", function (err, results) {
+  db.query("SELECT * FROM usuarioAfiliado_tablets", function (err, results) {
     if (err) {
       console.error("DB error GET /tablets/usuario:", err);
       return res.status(500).json({ error: err.message });
@@ -25,7 +25,7 @@ router.post("/", (req, res, next) => {
   };
 
   db.query(
-    "INSERT INTO `usuarioAfiliado`(`nombre`, `apellido`, `numeroAfiliado`, `email`, `telefono`, `direccion`, `ciudad`, `provincia`) VALUES (?,?,?,?,?,?,?,?)",
+    "INSERT INTO `usuarioAfiliado_tablets`(`nombre`, `apellido`, `numeroAfiliado`, `email`, `telefono`, `direccion`, `ciudad`, `provincia`) VALUES (?,?,?,?,?,?,?,?)",
     [usuario.nombre, usuario.apellido, usuario.numeroAfiliado, usuario.email, usuario.telefono, usuario.direccion, usuario.ciudad, usuario.provincia],
     function (err, results) {
       if (err) {

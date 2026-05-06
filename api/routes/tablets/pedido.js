@@ -5,8 +5,8 @@ const db = require("../../../config/db-totem");
 // GET: lista pedidos no borrados
 router.get("/", (req, res, next) => {
   db.query(
-    "SELECT * FROM pedido " +
-      "INNER JOIN usuarioAfiliado ON pedido.idUsuario = usuarioAfiliado.id " +
+    "SELECT * FROM pedido_tablets " +
+      "INNER JOIN usuarioAfiliado_tablets ON pedido_tablets.idUsuario = usuarioAfiliado_tablets.id " +
       "WHERE borrado = 0",
     function selectPedidos(err, results, fields) {
       if (err) {
@@ -26,8 +26,8 @@ router.get("/:pedidoId", (req, res, next) => {
 
   db.query(
     "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-      "FROM `pedido-producto` as pp " +
-      "INNER JOIN product as p ON pp.idProducto = p.id " +
+      "FROM `pedido_producto_tablets` as pp " +
+      "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
       "WHERE idPedido = ?",
     [id],
     function selectOrden(err, results, fields) {
@@ -47,7 +47,7 @@ router.post("/procesar", (req, res, next) => {
   const pedidoId = req.body.values.idPedido;
 
   db.query(
-    "UPDATE pedido SET estado = 'procesado' WHERE idPedido = ?",
+    "UPDATE pedido_tablets SET estado = 'procesado' WHERE idPedido = ?",
     [pedidoId],
     function updateEstado(err, results, fields) {
       if (err) {
@@ -59,8 +59,8 @@ router.post("/procesar", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido-producto` as pp " +
-          "INNER JOIN product as p ON pp.idProducto = p.id " +
+          "FROM `pedido_producto_tablets` as pp " +
+          "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
         function selectOrden(err2, results2, fields2) {
@@ -84,7 +84,7 @@ router.post("/pago", (req, res, next) => {
   const pagoTotal = req.body.total;
 
   db.query(
-    "UPDATE pedido SET pagoParcial = ?, pagoTotal = ? WHERE idPedido = ?",
+    "UPDATE pedido_tablets SET pagoParcial = ?, pagoTotal = ? WHERE idPedido = ?",
     [pagoParcial, pagoTotal, pedidoId],
     function updatePago(err, results, fields) {
       if (err) {
@@ -96,8 +96,8 @@ router.post("/pago", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido-producto` as pp " +
-          "INNER JOIN product as p ON pp.idProducto = p.id " +
+          "FROM `pedido_producto_tablets` as pp " +
+          "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
         function selectOrden(err2, results2, fields2) {
@@ -119,7 +119,7 @@ router.post("/cerrar", (req, res, next) => {
   const pedidoId = req.body.values.idPedido;
 
   db.query(
-    "UPDATE pedido SET estado = 'cerrado' WHERE idPedido = ?",
+    "UPDATE pedido_tablets SET estado = 'cerrado' WHERE idPedido = ?",
     [pedidoId],
     function updateEstado(err, results, fields) {
       if (err) {
@@ -131,8 +131,8 @@ router.post("/cerrar", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido-producto` as pp " +
-          "INNER JOIN product as p ON pp.idProducto = p.id " +
+          "FROM `pedido_producto_tablets` as pp " +
+          "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
         function selectOrden(err2, results2, fields2) {
@@ -154,7 +154,7 @@ router.post("/borrar", (req, res, next) => {
   const pedidoId = req.body.values.idPedido;
 
   db.query(
-    "UPDATE pedido SET borrado = 1 WHERE idPedido = ?",
+    "UPDATE pedido_tablets SET borrado = 1 WHERE idPedido = ?",
     [pedidoId],
     function updateBorrado(err, results, fields) {
       if (err) {
@@ -166,8 +166,8 @@ router.post("/borrar", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido-producto` as pp " +
-          "INNER JOIN product as p ON pp.idProducto = p.id " +
+          "FROM `pedido_producto_tablets` as pp " +
+          "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
         function selectOrden(err2, results2, fields2) {
@@ -205,7 +205,7 @@ router.post("/", (req, res, next) => {
   };
 
   db.query(
-    "INSERT INTO `pedido`(`idUsuario`, `fechaIngreso`, `estado`,`idRecetaGraduacion`,`total`,`numeroVoucher`,`urlReceta`,`info`) " +
+    "INSERT INTO `pedido_tablets`(`idUsuario`, `fechaIngreso`, `estado`,`idRecetaGraduacion`,`total`,`numeroVoucher`,`urlReceta`,`info`) " +
       "VALUES (?,NOW(),'nueva',?,?,?,?,?)",
     [
       pedido.usuarioId,
@@ -232,31 +232,31 @@ router.post("/", (req, res, next) => {
 
       // Inserts relacionados: loguean errores pero no rompen la request
       db.query(
-        "INSERT INTO `pedido-producto`(`idPedido`, `idProducto`, `precio`, `color`) VALUES (?,?,?,?)",
+        "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`, `color`) VALUES (?,?,?,?)",
         [pedidoId, pedido.idMarco, pedido.precioMarco, pedido.color],
         function addPedidoProducto(err2) {
           if (err2)
-            console.error("DB error INSERT pedido-producto (marco):", err2);
+            console.error("DB error INSERT pedido_producto_tablets (marco):", err2);
         },
       );
 
       db.query(
-        "INSERT INTO `pedido-producto`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
+        "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
         [pedidoId, pedido.idTipoLente, pedido.precioLente],
         function addPedidoProducto(err2) {
           if (err2)
-            console.error("DB error INSERT pedido-producto (lente):", err2);
+            console.error("DB error INSERT pedido_producto_tablets (lente):", err2);
         },
       );
 
       if (pedido.antireflejo !== "") {
         db.query(
-          "INSERT INTO `pedido-producto`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
+          "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
           [pedidoId, pedido.antireflejo, pedido.precioAntireflejo],
           function addPedidoProducto(err2) {
             if (err2)
               console.error(
-                "DB error INSERT pedido-producto (antireflejo):",
+                "DB error INSERT pedido_producto_tablets (antireflejo):",
                 err2,
               );
           },
@@ -265,12 +265,12 @@ router.post("/", (req, res, next) => {
 
       if (pedido.fotocromatico !== "") {
         db.query(
-          "INSERT INTO `pedido-producto`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
+          "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
           [pedidoId, pedido.fotocromatico, pedido.precioFotocromatico],
           function addPedidoProducto(err2) {
             if (err2)
               console.error(
-                "DB error INSERT pedido-producto (fotocromatico):",
+                "DB error INSERT pedido_producto_tablets (fotocromatico):",
                 err2,
               );
           },
@@ -298,7 +298,7 @@ router.post("/pagoMP", (req, res, next) => {
   const sede = req.body.values.sede;
 
   db.query(
-    "UPDATE pedido " +
+    "UPDATE pedido_tablets " +
       "SET pagoParcial = ?, pagoTotal = ?, estado = 'pagado', " +
       "mp_preference_id = ?, mp_merchant_order_id = ?, mp_payment_id = ?, mp_payment_type = ?, sede = ? " +
       "WHERE idPedido = ?",

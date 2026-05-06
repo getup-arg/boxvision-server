@@ -4,13 +4,14 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../../../config/db-totem");
 
+/*
 router.post("/signupadmin", (req, res) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
     if (err) {
       return res.status(500).json({ error: err });
     }
     db.query(
-      "INSERT INTO `adminuser`(`username`, `password`) VALUES (?, ?)",
+      "INSERT INTO `adminuser_tablets`(`username`, `password`) VALUES (?, ?)",
       [req.body.user, hash],
       function (err) {
         if (err) {
@@ -21,14 +22,14 @@ router.post("/signupadmin", (req, res) => {
       }
     );
   });
-});
+});*/
 
 router.post("/", (req, res) => {
   var appData = {};
   var user = req.body.user;
 
   db.query(
-    "SELECT * FROM adminuser WHERE username = ?",
+    "SELECT * FROM adminuser_tablets WHERE username = ?",
     [user.usuario],
     function (err, rows) {
       if (err) {
