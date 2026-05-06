@@ -1,1 +1,1 @@
-module.exports = require("./db-tablets");
+module.exports = require("./db-totem");

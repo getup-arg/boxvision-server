@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const db = require("../../../config/db-tablets");
+const db = require("../../../config/db-totem");
 
 router.post("/signupadmin", (req, res) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {

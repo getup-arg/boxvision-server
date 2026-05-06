@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../../config/db-tablets");
+const db = require("../../../config/db-totem");
 
 router.get("/", (req, res, next) => {
   db.query("SELECT * FROM usuarioAfiliado", function (err, results) {

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../../config/db-tablets");
+const db = require("../../../config/db-totem");
 
 // GET: lista pedidos no borrados
 router.get("/", (req, res, next) => {
