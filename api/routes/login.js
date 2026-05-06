@@ -32,8 +32,10 @@ router.post("/", (req, res) => {
     [user.usuario],
     function (err, rows) {
       if (err) {
+        console.error("DB error POST /login:", err);
         appData.error = 1;
         appData.data = "Error Occured!";
+        appData.debug = err.message;
         return res.send(appData);
       }
       if (rows.length > 0) {
