@@ -26,7 +26,7 @@ router.get("/:pedidoId", (req, res, next) => {
 
   db.query(
     "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-      "FROM `pedido_producto_tablets` as pp " +
+      "FROM `pedido-producto_tablets` as pp " +
       "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
       "WHERE idPedido = ?",
     [id],
@@ -59,7 +59,7 @@ router.post("/procesar", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido_producto_tablets` as pp " +
+          "FROM `pedido-producto_tablets` as pp " +
           "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
@@ -96,7 +96,7 @@ router.post("/pago", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido_producto_tablets` as pp " +
+          "FROM `pedido-producto_tablets` as pp " +
           "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
@@ -131,7 +131,7 @@ router.post("/cerrar", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido_producto_tablets` as pp " +
+          "FROM `pedido-producto_tablets` as pp " +
           "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
@@ -166,7 +166,7 @@ router.post("/borrar", (req, res, next) => {
 
       db.query(
         "SELECT pp.idProducto, pp.precio as 'precioOrden', pp.color, p.* " +
-          "FROM `pedido_producto_tablets` as pp " +
+          "FROM `pedido-producto_tablets` as pp " +
           "INNER JOIN product_tablets as p ON pp.idProducto = p.id " +
           "WHERE idPedido = ?",
         [pedidoId],
@@ -232,31 +232,31 @@ router.post("/", (req, res, next) => {
 
       // Inserts relacionados: loguean errores pero no rompen la request
       db.query(
-        "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`, `color`) VALUES (?,?,?,?)",
+        "INSERT INTO `pedido-producto_tablets`(`idPedido`, `idProducto`, `precio`, `color`) VALUES (?,?,?,?)",
         [pedidoId, pedido.idMarco, pedido.precioMarco, pedido.color],
         function addPedidoProducto(err2) {
           if (err2)
-            console.error("DB error INSERT pedido_producto_tablets (marco):", err2);
+            console.error("DB error INSERT pedido-producto_tablets  (marco):", err2);
         },
       );
 
       db.query(
-        "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
+        "INSERT INTO `pedido-producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
         [pedidoId, pedido.idTipoLente, pedido.precioLente],
         function addPedidoProducto(err2) {
           if (err2)
-            console.error("DB error INSERT pedido_producto_tablets (lente):", err2);
+            console.error("DB error INSERT pedido-producto_tablets  (lente):", err2);
         },
       );
 
       if (pedido.antireflejo !== "") {
         db.query(
-          "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
+          "INSERT INTO `pedido-producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
           [pedidoId, pedido.antireflejo, pedido.precioAntireflejo],
           function addPedidoProducto(err2) {
             if (err2)
               console.error(
-                "DB error INSERT pedido_producto_tablets (antireflejo):",
+                "DB error INSERT pedido-producto_tablets  (antireflejo):",
                 err2,
               );
           },
@@ -265,12 +265,12 @@ router.post("/", (req, res, next) => {
 
       if (pedido.fotocromatico !== "") {
         db.query(
-          "INSERT INTO `pedido_producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
+          "INSERT INTO `pedido-producto_tablets`(`idPedido`, `idProducto`, `precio`) VALUES (?,?,?)",
           [pedidoId, pedido.fotocromatico, pedido.precioFotocromatico],
           function addPedidoProducto(err2) {
             if (err2)
               console.error(
-                "DB error INSERT pedido_producto_tablets (fotocromatico):",
+                "DB error INSERT pedido-producto_tablets  (fotocromatico):",
                 err2,
               );
           },

@@ -14,10 +14,13 @@ const loginRoutesTablets = require("./api/routes/tablets/login");
 const usuarioRoutesTablets = require("./api/routes/tablets/usuario");
 const graduacionRoutesTablets = require("./api/routes/tablets/graduacion");
 const pedidoRoutesTablets = require("./api/routes/tablets/pedido");
+const pagosRoutesTablets = require("./api/routes/tablets/pagos");
+const recetasRoutesTablets = require("./api/routes/tablets/recetas");
+const recetas2RoutesTablets = require("./api/routes/tablets/recetas2");
 
 app.use(morgan("dev"));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false, limit: "20mb" }));
+app.use(bodyParser.json({ limit: "20mb" }));
 
 // Add headers
 app.use(function(req, res, next) {
@@ -52,6 +55,9 @@ app.use("/tablets/login", loginRoutesTablets);
 app.use("/tablets/usuario", usuarioRoutesTablets);
 app.use("/tablets/graduacion", graduacionRoutesTablets);
 app.use("/tablets/pedido", pedidoRoutesTablets);
+app.use("/tablets/pagos", pagosRoutesTablets);
+app.use("/tablets/recetas", recetasRoutesTablets);
+app.use("/tablets/recetas2", recetas2RoutesTablets);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");

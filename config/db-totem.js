@@ -3,9 +3,6 @@ const mysql = require("mysql2");
 const socket = process.env.DB_TOTEM_SOCKET;
 const host = process.env.DB_TOTEM_HOST;
 
-console.log("[db-totem] socket:", socket || "(not set)");
-console.log("[db-totem] host:", host || "(not set)");
-
 const connConfig = socket
   ? { socketPath: socket }
   : { host, port: process.env.DB_TOTEM_PORT || 3306 };

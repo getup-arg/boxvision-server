@@ -25,4 +25,4 @@ ALTER TABLE `pedido_tablets`
   ADD COLUMN IF NOT EXISTS `mp_payment_id`         VARCHAR(255) NULL,
   ADD COLUMN IF NOT EXISTS `mp_payment_type`       VARCHAR(64)  NULL;
 
-CREATE TABLE IF NOT EXISTS `pedido_producto_tablets` LIKE `pedido-producto`;
+CREATE TABLE IF NOT EXISTS `pedido-producto_tablets` LIKE `pedido-producto`;
